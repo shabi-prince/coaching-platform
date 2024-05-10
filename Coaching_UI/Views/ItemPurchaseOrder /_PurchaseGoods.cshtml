@@ -1,0 +1,54 @@
+
+﻿@model IEnumerable<Domain.Entities.ItemPurchaseGoods>
+
+@if (Model != null)
+{
+    int index = 0;
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                <input type="hidden" asp-for="@item.id" class="ItemPurchaseGoodId" />
+                <input type="hidden" asp-for="@item.PurchaseOrderId" class="PurchaseOrderId" />
+                <select asp-for="@item.ItemId" id="ItemId" name="ItemId" class="form-control form-select ItemId" asp-items="ViewBag.ItemsList">
+                    <option value="" disabled selected>Select Item</option>
+                </select>
+            </td>
+            <td>
+                <input maxlength="13" min="0" type="number" value="@Html.DisplayFor(modelItem => item.quantity)" id="Quantity@(index)" onchange="CricketAcademy.ItemPurchaseOrder.LineTotal(@index)" name="Quantity" class="form-control Quantity" />
+            </td>
+            <td>
+                <input type="number" value="@Html.DisplayFor(modelItem => item.UnitPrice)" min="0" id="UnitPrice@(index)" onchange="CricketAcademy.ItemPurchaseOrder.LineTotal(@index)" name="UnitPrice" class="form-control UnitPrice" />
+            </td>
+            <td>
+                <input id="LineTotal@(index)" min="0" name="LineTotal" class="form-control LineTotal" tabindex="-1" readonly />
+            </td>
+            <td>
+                <a href="javascript:;" id="remove-row"><i class="fa fa-trash fa-lg text-danger"></i></a>
+            </td>
+        </tr>
+        index++;
+    }
+}
+else
+{
+    <tr>
+        <td>
+            <select id="ItemId" name="ItemId" class="form-control form-select ItemId" asp-items="ViewBag.ItemsList">
+                <option value="" disabled selected>Select Item</option>
+            </select>
+        </td>
+        <td>
+            <input maxlength="13" min="0" type="number" value="0" id="Quantity0" onchange="CricketAcademy.ItemPurchaseOrder.LineTotal(0)" name="Quantity" class="form-control Quantity" />
+        </td>
+        <td>
+            <input type="number" min="0" value="0" id="UnitPrice0" onchange="CricketAcademy.ItemPurchaseOrder.LineTotal(0)" name="UnitPrice" class="form-control UnitPrice" />
+        </td>
+        <td>
+            <input value="0" min="0" id="LineTotal0" name="LineTotal" class="form-control LineTotal" tabindex="-1" readonly />
+        </td>
+        <td>
+            <a href="javascript:;" id="remove-row"><i class="fa fa-trash fa-lg text-danger"></i></a>
+        </td>
+    </tr>
+}
