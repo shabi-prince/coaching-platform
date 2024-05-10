@@ -1,0 +1,74 @@
+﻿@model IEnumerable<Domain.Entities.Notifications>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <div class="container-fluid px-0">
+            <div class="row align-items-center position-relative">
+                <div class="col-md-8 mb-4 mb-md-0">
+                    <h5 class="mb-0">Notifications</h5>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <button class="btn text-white" style="background-color: green;" id="update-status">Acknowledge</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row justify-content-between align-items-center">
+            <div class="col">
+                <div class="row align-items-center">
+                    <table class="table tableDt">
+                        <thead>
+                            <tr>
+                                <th>
+
+                                </th>
+                                <th>
+                                    Description
+                                </th>
+                                <th>
+                                    Date
+                                </th>
+                                <th> Status</th>
+                                @*<th>
+                                Actions
+                                </th>*@
+                            </tr>
+                        </thead>
+                        <tbody id="notes-body">
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <input type="hidden" asp-for="@item.id" />
+                                        @if (item.Status == "Acknowledged")
+                                        {
+                                            <input type="checkbox" id="@item.id" class="CheckStatus" checked />
+                                        }
+                                        else
+                                        {
+                                            <input type="checkbox" id="@item.id" class="CheckStatus" />
+                                        }
+                                    </td>
+                                    <td>
+                                        <b>@Html.DisplayFor(modelItem => item.Heading)</b> @Html.DisplayFor(modelItem => item.Description)
+                                    </td>
+                                    <td>
+                                        @item.CreatedAt.ToString("dd/MM/yyyy")
+                                    </td>
+                                    <td>
+                                        @item.Status
+                                    </td>
+                                    @*<td>
+                                <a href="#"> <i class="fas fa-check text-success" style="color: #162168; font-size:initial;"></i></a>
+                                </td>*@
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
