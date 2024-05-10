@@ -1,0 +1,129 @@
+﻿@model Domain.Entities.Item
+@using Domain.Enums
+<div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">@(Model.id == 0 ? "New Item" : "Edit Item")</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" asp-for="id" id="ItemId" />
+            <input type="hidden" asp-for="CreatedAt" />
+            <input type="hidden" asp-for="CreatedBy" />
+            <input type="hidden" asp-for="UpdatedAt" />
+            <input type="hidden" asp-for="UpdatedBy" />
+            <input type="hidden" asp-for="DeletedAt" />
+            <input type="hidden" asp-for="DeletedBy" />
+            <input type="hidden" asp-for="IsActive" />
+            <input id="ItemCategoryId" type="hidden" id="ItemCategoryId" asp-for="ItemCategoryId" />
+            <div class="form-group">
+                <label style="font-size: medium;" asp-for="ItemName" class="control-label mandatory">Name</label>
+                <input style="margin-top:5px;" asp-for="ItemName" id="ItemName" class="form-control" />
+                <span asp-validation-for="ItemName" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-lg-6">
+                    <label style="margin-top: 10px; font-size: medium;" asp-for="ItemCode" class="control-label mandatory">Code</label>
+                    <input style="margin-top:5px;" asp-for="ItemCode" id="ItemCode" class="form-control" />
+                    <span asp-validation-for="ItemCode" class="text-danger"></span>
+                </div>
+              
+@*            <div class="row">
+                <div class="form-group col-lg-6">
+                    <label style="margin-top: 10px; font-size: medium;" asp-for="Cost" class="control-label mandatory"></label>
+                    <input style="margin-top:5px;" asp-for="Cost" id="Cost" min="0" class="form-control" />
+                    <span asp-validation-for="Cost" class="text-danger"></span>
+                </div>
+                <div class="form-group col-lg-6">
+                    <label style="margin-top: 10px; font-size: medium;" asp-for="Price" class="control-label mandatory"></label>
+                    <input style="margin-top:5px;" asp-for="Price" id="Price" min="0" class="form-control" />
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+            </div>*@
+        </div>
+        <div class="modal-footer">
+            <button type="button" id="close" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+            <button type="button" id="save" class="btn text-white" style="background-color: green">@(Model.id == 0 ? "Save" : "Update")</button>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        setTimeout(() => {
+            $("#ItemName").focus();
+        }, "1000");
+        $("#close").on("click", function () {
+            $("#ItemFormModal").modal("hide");
+        });
+        $("#save").on("click", function () {
+            console.log("Going to Save")
+            Save();
+        });
+        $("#ItemForm").validate({
+            rules: {
+                ItemName: {
+                    required: true,
+                    maxlength: 100
+                },
+                ItemCode: {
+                    required: true
+                },
+                //Price: {
+                //    required: true,
+                //    NumberValidator: true
+                //}
+            }
+        });
+        $("#ItemForm").on("change", "#ItemName,#ItemCode,#Cost,#Price", function () {
+            console.log("Item Form value is changed!")
+            $(this).siblings(".error").remove();
+        });
+        function Save() {
+            console.log("Inside Save Method")
+            let Item = {
+                id: $("#ItemId").val(),
+                ItemName: $("#ItemName").val(),
+                ItemCode: $("#ItemCode").val(),
+                ItemCategoryId: $("#ItemCategoryId").val(),
+                Stock: $("#Stock").val(),
+                Cost: $("#Cost").val(),
+                Price: $("#Price").val(),
+            };
+            var ValidationFlag = true;
+
+            if (Item.ItemName == null || Item.ItemName == undefined || Item.ItemName == "") {
+                $("#ItemName").siblings(".error").remove();
+                $("#ItemName").after("<label class='error' style='color:red'>Name is Required!</label>");
+                ValidationFlag = false;
+            }
+            if (Item.ItemCode == null || Item.ItemCode == undefined || Item.ItemCode == "") {
+                $("#ItemCode").siblings(".error").remove();
+                $("#ItemCode").after("<label class='error' style='color:red'>Code is Required!</label>");
+                ValidationFlag = false;
+            }
+            //if (parseFloat(Item.Cost) > 0 == false) {
+            //    $("#Cost").siblings(".error").remove();
+            //    $("#Cost").after("<label class='error' style='color:red'>Cost is Required!</label>");
+            //    ValidationFlag = false;
+            //}
+            //if (parseFloat(Item.Price) > 0 == false) {
+            //    $("#Price").siblings(".error").remove();
+            //    $("#Price").after("<label class='error' style='color:red'>Price is Required!</label>");
+            //    ValidationFlag = false;
+            //}
+
+            if (!ValidationFlag) return;
+            console.log(Item);
+
+            CricketAcademy.Tools.AjaxCall("POST", "/Item/Create", Item, null, function (res, status, err) {
+                window.location.href = "/Item/Index";
+            },
+                null,
+                true
+            );
+        }
+    })
+</script>
