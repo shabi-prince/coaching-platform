@@ -1,0 +1,15 @@
+
+﻿@model Domain.Entities.PaymentVoucherDetail
+<tr>
+    <td colspan="2">
+        <input type="hidden" value="@Model.id" class="VoucherDetailId" />
+        <input type="hidden" asp-for="PaymentVoucherId" class="VoucherHeadId" />
+        <input type="text" asp-for="Description" class="form-control Description" />
+    </td>
+    <td colspan="1">
+        <input asp-for="Amount" type="number" min="0" class="form-control Amount" />
+    </td>
+    <td colspan="1">
+        <a href="javascript:;" id="RemoveItem"><i class="fa fa-trash fa-lg text-danger mt-2"></i></a>
+    </td>
+</tr>
