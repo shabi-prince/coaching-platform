@@ -1,0 +1,112 @@
+
+﻿@model Domain.Entities.PaymentVoucher
+@using Domain.Entities;
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+    <div class="col-md-12">
+        <h4>Payment Voucher</h4>
+        <hr />
+    </div>
+    <div class="col-md-12">
+        <form id="VoucherForm">
+            <input type="hidden" asp-for="id" class="VoucherHeadId" />
+            <input type="hidden" asp-for="CreatedAt" />
+            <input type="hidden" asp-for="CreatedBy" />
+            <input type="hidden" asp-for="UpdatedAt" />
+            <input type="hidden" asp-for="UpdatedBy" />
+            <input type="hidden" asp-for="DeletedAt" />
+            <input type="hidden" asp-for="DeletedBy" />
+            <input type="hidden" asp-for="IsActive" />
+            <div class="row">
+                <div class="form-group col-lg-3">
+                    <label style="font-size: medium;" asp-for="VoucherCode" class="control-label">Voucher No.</label>
+                    <input style="margin-top:5px;" value="@Model.VoucherCode" asp-for="VoucherCode" class="form-control VoucherCode" tabindex="-1" readonly />
+                    <span asp-validation-for="VoucherCode" class="text-danger"></span>
+                </div>
+                <div class="form-group col-lg-3">
+                    <label style="font-size: medium; margin-top: 0px;" asp-for="VoucherDate" class="control-label mandatory">Voucher Date</label>
+                    <input style="margin-top:5px;" type="date" asp-for="VoucherDate" id="VoucherDate" max="@DateTime.Now.AddHours(5).ToString("yyyy-MM-dd")" class="form-control VoucherDate" />
+                    <span asp-validation-for="VoucherDate" class="text-danger"></span>
+                </div>
+                <div class="form-group col-lg-3">
+                    <label style="font-size: medium;" asp-for="AccountCodeId" class="control-label">Account Name</label>
+                    <select style="margin-top:5px;" asp-for="AccountCodeId" id="AccountCodeId" class="form-control accountcodedropdown AccountCodeId mandatory" asp-items="@ViewBag.Accounts_List">
+                        <option value="" disabled selected>Select Account</option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-3">
+                    <label style="font-size: medium;" asp-for="PaymentMethod_id" class="control-label">Payment Method</label>
+                    <select style="margin-top:5px;" asp-for="PaymentMethod_id" id="PaymentMethod_id" class="form-control accountcodedropdown PaymentMethod_id mandatory" asp-items="@ViewBag.PyamentMethodsList">
+                        <option value="" disabled selected>Select Payment Method</option>
+                    </select>
+                </div>
+
+            </div>
+            <br />
+            <div class="wrapper wrapper-content animated fadeInRight">
+                <div class="ibox-content">
+                    <table class="table table-striped table-responsive-sm">
+                        <thead>
+                            <tr class="text-white">
+                                <th style="background-color:green !important; width:400px;" colspan="2">
+                                    Description/Remarks
+                                </th>
+                                <th style="background-color:green !important" colspan="1">
+                                    Amount
+                                </th>
+                                <th style="background-color:green !important" colspan="1">
+                                    <a href="javascript:;" id="AddItem" class="fa fa-plus-square fa-lg"></a>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="t-body">
+                            @if (Model.PaymentVoucherDetails == null)
+                            {
+                                <partial name="~/Views/PaymentVoucher/_VoucherDetail.cshtml" model="@(new PaymentVoucherDetail())"></partial>
+                            }
+                            else
+                            {
+                                @foreach (var item in Model.PaymentVoucherDetails)
+                                {
+                                    <partial name="~/Views/PaymentVoucher/_VoucherDetail.cshtml" model="item"></partial>
+                                }
+                            }
+                            <tr>
+                                <td></td>
+                                <td style="text-align:right;">
+                                    <b>Grand Total :</b>
+                                </td>
+                                <td>
+                                    <input  asp-for="VoucherAmount" id="VoucherAmount" class="form-control VoucherAmount" tabindex="-1" readonly />
+                                    <span asp-validation-for="VoucherAmount" id="VoucherAmount" class="text-danger VoucherAmount"></span>
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-lg-12 d-flex justify-content-end">
+                    <button type="button" id="close" class="btn btn-danger" style="margin-left:10px;">Close</button>
+                    <button id="save" class="btn text-white" style="background-color: green; margin-left: 10px;">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@section scripts{
+    <script src="~/js/PaymentVoucher.js"></script>
+    <script>
+        $(document).ready(function () {
+            setTimeout(() => {
+                $("#AccountCodeId").focus();
+            }, "1000")
+            CricketAcademy.PaymentVoucher.Init();
+        });
+    </script>
+}
