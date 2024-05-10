@@ -1,0 +1,84 @@
+﻿@model IEnumerable<Domain.Entities.Item>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-header">
+                <div class="container-fluid px-0">
+                    <div class="row align-items-center position-relative">
+                        <div class="col-md-8 mb-4 mb-md-0">
+                            <h5 class="mb-0">Items</h5>
+                        </div>
+                        <div class="col-md-4 text-md-end">
+                            <a asp-controller="Reports" asp-action="ItemReport" target="_blank" class="btn text-white" style="background-color: green;"><i class="fa fa-print" aria-hidden="true"></i> Print</a>
+                            @*<a onclick="PrintItemsByCategory()" class="btn text-white" style="background-color: green;"><i class="fa fa-print" aria-hidden="true"></i> Print</a>*@
+                            <button class="btn text-white" style="background-color: green;" onclick="EditRecord(0, '/Item/_Create','#ItemFormModal','#ItemForm')"> <i class="fa fa-plus" aria-hidden="true"></i> New Item</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row justify-content-between align-items-center">
+                    <div class="col">
+                        <div class="row align-items-center">
+                            <table class="table tableDt">
+                                <thead style="background-color:forestgreen">
+                                    <tr style="color:white; text-align: center;">
+                                        <th>
+                                            Item Name
+                                        </th>
+                                        <th>
+                                            Item Code
+                                        </th>
+                                        <th>
+                                            Stock
+                                        </th>
+                                        <th class="all">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody style=" text-align: center;">
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ItemName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ItemCode)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Stock)
+                                            </td>
+
+                                            <td>
+                                                <div>
+                                                    <a href="#" onclick="EditRecord(@item.id, '/Item/_Create', '#ItemFormModal', '#ItemForm')">
+                                                        <i class="fas fa-pen" style="color: green; font-size:initial;"></i>
+                                                    </a>
+                                                    <a href="#" onclick="DeleteRecord(@item.id, '/Item/Delete')">
+                                                        <i class="fa fa-times-circle fa-lg text-danger"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!--CREATE MODAL-->
+
+        <div class="modal fade" data-backdrop="static" id="ItemFormModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <form id="ItemForm">
+            </form>
+        </div>
+        <partial name="~/Views/Shared/_DeleteModal.cshtml">
+    </div>
+</div>
